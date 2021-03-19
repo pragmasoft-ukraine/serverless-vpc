@@ -4,4 +4,4 @@ import * as cdk from '@aws-cdk/core';
 import { ServerlessVpcStack } from '../lib/serverless-vpc-stack';
 
 const app = new cdk.App();
-new ServerlessVpcStack(app, 'ServerlessVpcStack');
+new ServerlessVpcStack(app, 'aaServerlessVpcStack');
