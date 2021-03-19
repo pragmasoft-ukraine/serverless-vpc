@@ -2,8 +2,9 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as ec2 from "@aws-cdk/aws-ec2";
 import * as iam from "@aws-cdk/aws-iam";
 import * as cdk from "@aws-cdk/core";
-import { Duration } from "@aws-cdk/core";
+import { Aspects, Duration } from "@aws-cdk/core";
 import { NatProvider, SubnetType } from "@aws-cdk/aws-ec2";
+import { VpcAttachAspect } from "./vpc-attach-aspect";
 
 export interface ServerlessVpcStackProps extends cdk.StackProps {
   development?: boolean;
@@ -71,5 +72,8 @@ export class ServerlessVpcStack extends cdk.Stack {
     const s3Policy = iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3ReadOnlyAccess')
 
     this.lambda.role?.addManagedPolicy(s3Policy);
+
+    Aspects.of(this).add(new VpcAttachAspect(this.vpc));
+    
   }
 }
