@@ -16,3 +16,13 @@ To install dependencies, run `npm i`
  * `npm cdk deploy`      deploy this stack to your default AWS account/region
  * `npm cdk diff`        compare deployed stack with current state
  * `npm cdk synth`       emits the synthesized CloudFormation template
+
+
+## AWS services used
+
+* s3
+* dynamodb
+* stepfunctions
+* athena
+* events
+* ApiGatewayManagementApi

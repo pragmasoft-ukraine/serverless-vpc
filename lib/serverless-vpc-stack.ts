@@ -31,22 +31,37 @@ export class ServerlessVpcStack extends cdk.Stack {
     this.vpc = new ec2.Vpc(this, "serverless-vpc", {
       cidr: this.cidr,
       gatewayEndpoints: {
-        "S3": {
+        S3: {
           service: ec2.GatewayVpcEndpointAwsService.S3,
         },
-        "DynamoDB": {
-          service: ec2.GatewayVpcEndpointAwsService.DYNAMODB
-        }
+        DynamoDB: {
+          service: ec2.GatewayVpcEndpointAwsService.DYNAMODB,
+        },
       },
       maxAzs: 2,
       subnetConfiguration: [
         {
           cidrMask: 24,
-          name: 'isolated',
+          name: "isolated",
           subnetType: ec2.SubnetType.ISOLATED,
-        }
-      ],      
+        },
+      ],
     });
+
+    type InterfaceEndpointsList = {
+      [name: string]: ec2.InterfaceVpcEndpointAwsService;
+    }
+
+    const interfaceEndpoints: InterfaceEndpointsList = {
+      stepfunctions: ec2.InterfaceVpcEndpointAwsService.STEP_FUNCTIONS,
+      athena: ec2.InterfaceVpcEndpointAwsService.ATHENA,
+      apigw: ec2.InterfaceVpcEndpointAwsService.APIGATEWAY,
+      events: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_EVENTS,
+    };
+
+    Object.keys(interfaceEndpoints).forEach((name) =>
+      this.vpc.addInterfaceEndpoint(name, { service: interfaceEndpoints[name] })
+    );
 
     const environment = {
       NODE_OPTIONS: "--enable-source-maps",
